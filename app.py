@@ -35,9 +35,9 @@ class UserSchema(ma.Schema):
         fields = ("id","name","description", "price","qty","date_created", "_links")
 
     # Smart hyperlinking
-    # _links = ma.Hyperlinks(
-    #     {"self": ma.URLFor("user_detail", id="<id>"), "collection": ma.URLFor("users")}
-    # )
+    _links = ma.Hyperlinks(
+        {"self": ma.URLFor("single_product", id="<id>"), "collection": ma.URLFor("product")}
+    )
 
 
 user_schema = UserSchema()
