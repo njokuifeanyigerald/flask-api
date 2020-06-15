@@ -16,23 +16,19 @@ ma = Marshmallow(app)
 
 class Product(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    name =db.Column(db.String(100), unique=True)
-    description = db.Column(db.String(200))
-    price = db.Column(db.Float)
-    qty = db.Column(db.Integer)
+    name =db.Column(db.String(100))
+    email = db.Column(db.String(100), unique=True)
     date_created = db.Column(db.DateTime, nullable=False,default=datetime.utcnow)
 
-    def __init__(self, name, description, price, qty):
+    def __init__(self, name, email):
         self.name = name
-        self.description = description
-        self.price = price
-        self.qty = qty
+        self.email = email
     
 
 class UserSchema(ma.Schema):
     class Meta:
         # Fields to expose
-        fields = ("id","name","description", "price","qty","date_created", "_links")
+        fields = ("id","name","email","date_created", "_links")
 
     # Smart hyperlinking
     _links = ma.Hyperlinks(
@@ -49,7 +45,7 @@ def product():
     return jsonify(result)
 
 @app.route('/product/<id>', methods=['GET'])
-def single_product():
+def single_product(id):
     single_product = Product.query.get(id)
     return user_schema.jsonify(single_product)
      
@@ -57,20 +53,33 @@ def single_product():
 @app.route('/product', methods=['POST'])
 def addProduct():
     name  = request.json['name']
-    description = request.json['description']
-    price = request.json['price']
-    qty = request.json['qty']
-    new_product  = Product(name=name,description=description,price=price,qty=qty)
-    if Product.query.filter_by(name=name).count() == 0:
+    email = request.json['email']
+  
+    new_product  = Product(name=name,email=email)
+    if Product.query.filter_by(email=email).count() == 0:
         db.session.add(new_product)
         db.session.commit()
         return user_schema.jsonify(new_product)
     else:
-        return "name already exist"
+        return "Email already exist"
+        
+    
+@app.route('/product/<id>', methods=['PUT'])
+def update(id):
+    update_product = Product.query.get(id)
+    name  = request.json['name']
+    email = request.json['email']
+    update_product.name = name
+    update_product.email = email
+    db.session.commit()
+    return user_schema.jsonify(update_product)
+        
+        
+       
         
     
 
-
+   
 
 if __name__ == '__main__':
     app.run(debug=True)
