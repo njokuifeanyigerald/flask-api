@@ -38,19 +38,19 @@ class UserSchema(ma.Schema):
 
 user_schema = UserSchema()
 users_schema = UserSchema(many=True)
-@app.route('/product', methods=['GET'])
+@app.route('/', methods=['GET'])
 def product():
     all_products = Product.query.all()
     result = users_schema.dump(all_products)
     return jsonify(result)
 
-@app.route('/product/<id>', methods=['GET'])
+@app.route('/<id>', methods=['GET'])
 def single_product(id):
     single_product = Product.query.get(id)
     return user_schema.jsonify(single_product)
      
 
-@app.route('/product', methods=['POST'])
+@app.route('/', methods=['POST'])
 def addProduct():
     name  = request.json['name']
     email = request.json['email']
@@ -64,7 +64,7 @@ def addProduct():
         return "Email already exist"
         
     
-@app.route('/product/<id>', methods=['PUT'])
+@app.route('/<id>', methods=['PUT'])
 def update(id):
     update_product = Product.query.get(id)
     name  = request.json['name']
