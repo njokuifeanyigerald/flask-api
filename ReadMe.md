@@ -1,6 +1,6 @@
-###using flask to create an api with flask marshmallow
+# using flask to create an api with flask marshmallow
 
-pipinstall pipenv 
+pip install pipenv 
 pipenv shell
 pipenv install Flask
 pipenv install flask-marshmallow
